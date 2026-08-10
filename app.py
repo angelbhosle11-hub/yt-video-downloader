@@ -33,6 +33,5 @@ def upload_frame():
     return jsonify({"status": "saved", "file": filename}), 200
 
 if __name__ == "__main__":
-    # Cloud Run PORT environment variable use karega [citation:12]
-    port = int(os.environ.get("PORT", 8080))
+    port = int(os.environ.get("PORT", 5000))  # Render 5000 use karta hai
     app.run(host="0.0.0.0", port=port, debug=False)
