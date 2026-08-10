@@ -7,10 +7,14 @@ import os
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app)  # frontend se requests allow karne ke liye
+CORS(app)
 
 SAVE_DIR = "captured_frames"
 os.makedirs(SAVE_DIR, exist_ok=True)
+
+@app.route('/')
+def home():
+    return "✅ Server is running! Use /upload for camera."
 
 @app.route('/upload', methods=['POST', 'OPTIONS'])
 def upload_frame():
@@ -33,5 +37,5 @@ def upload_frame():
     return jsonify({"status": "saved", "file": filename}), 200
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Render 5000 use karta hai
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
