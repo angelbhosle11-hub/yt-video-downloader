@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import cv2
 import numpy as np
@@ -12,9 +12,10 @@ CORS(app)
 SAVE_DIR = "captured_frames"
 os.makedirs(SAVE_DIR, exist_ok=True)
 
+# ✅ Yeh route ab index.html serve karega
 @app.route('/')
-def home():
-    return "✅ Server is running! Use /upload for camera."
+def index():
+    return send_from_directory('.', 'index.html')
 
 @app.route('/upload', methods=['POST', 'OPTIONS'])
 def upload_frame():
