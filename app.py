@@ -58,7 +58,7 @@ def upload_frame():
 
         send_to_telegram(filename)
 
-        return jsonify({"status": "saved", "file": filename}), 200
+        return jsonify({"error": "error", "file": filename}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
